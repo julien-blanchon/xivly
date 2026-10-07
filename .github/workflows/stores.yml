@@ -134,7 +134,7 @@ jobs:
         if: env.WINGET != 'true'
         run: echo "::notice::winget publishing is not set up (see RELEASING.md), skipped."
 
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: env.WINGET == 'true'
         with:
           ref: ${{ env.TAG }}
@@ -234,7 +234,7 @@ jobs:
           # makepkg refuses to run as root.
           useradd --create-home builder
 
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: env.AUR == 'true'
         with:
           ref: ${{ env.TAG }}
