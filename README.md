@@ -1,11 +1,25 @@
-<p align="center"><img src="src-tauri/icons/icon.png" width="128" height="128" alt=""></p>
+<p align="center"><img src="src-tauri/icons/icon.png" width="128" height="128" alt="Xivly icon"></p>
 
 <h1 align="center">Xivly</h1>
 <p align="center"><em>Papers, without distraction.</em></p>
+<p align="center">A calm, open-source PDF reader for arXiv and research papers: annotate, organize, and preview citations and figures on hover.</p>
+
+<p align="center">
+  <a href="https://github.com/julien-blanchon/xivly/releases/latest"><img src="https://img.shields.io/github/v/release/julien-blanchon/xivly?label=release&color=7fa36a" alt="Latest release"></a>
+  <img src="https://img.shields.io/badge/platforms-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux%20%C2%B7%20Web-6fa3c2" alt="macOS, Windows, Linux, Web">
+  <a href="https://chromewebstore.google.com/detail/xivly/ckcfikoohhefehgbgngopbbiidnhalpi"><img src="https://img.shields.io/chrome-web-store/v/ckcfikoohhefehgbgngopbbiidnhalpi?label=chrome%20extension&color=9a82c4" alt="Chrome extension"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/julien-blanchon/xivly?color=8f8a80" alt="MIT License"></a>
+</p>
+
+<p align="center">
+  <a href="#install"><b>Download</b></a> ·
+  <a href="https://julien-blanchon.github.io/xivly"><b>Open the web app</b></a> ·
+  <a href="https://chromewebstore.google.com/detail/xivly/ckcfikoohhefehgbgngopbbiidnhalpi"><b>Chrome extension</b></a>
+</p>
 
 https://github.com/user-attachments/assets/c67ae97f-a1a4-4fdd-8edb-b77ba62bce72
 
-A calm reader for research papers: read, annotate and organize your PDFs. Free and open source, on Mac, Windows, Linux, the web and Chrome. No account, no tracking: your library is a folder of plain files.
+Xivly is a reader for research papers: read, annotate and organize your PDFs, from arXiv or anywhere else. Free and open source (MIT), on Mac, Windows, Linux, the web and Chrome. No account, no tracking, no cloud: your library is a folder of plain files, and your notes are saved inside the PDFs.
 
 ## Features
 
@@ -57,11 +71,29 @@ Open the folder in Claude Code and ask it about your papers and highlights. Unkn
 
 **Hooks (desktop):** drop a script named after an event in `.xivly/hooks/` (`paper-added`, `paper-saved`, `paper-updated`, `paper-removed`; `paper-added.py` works too). It runs in the paper's folder with `paper.json` on stdin; output goes to `.xivly/logs/hooks.log`. Executables or `.sh` on macOS and Linux, `.ps1`, `.cmd` or `.bat` on Windows. Xivly never writes hook scripts itself (only a `.sample`), so enabling one is always your choice.
 
+## Compared with…
+
+- **Zotero, Mendeley:** reference managers first, with a reader inside. Xivly is a reader first, with a light library around it. No account, no database: notes are standard annotations in the PDF and metadata is a JSON file next to it.
+- **Sioyek:** also built for papers, keyboard-driven, with reference previews. Xivly adds a library (categories, tags, read / unread), one-step arXiv and Hugging Face import, annotations saved in the PDF itself, and it runs on the web too.
+- **Skim, Preview, PDF Expert, Acrobat:** general PDF apps. Xivly understands papers: citations, figures, tables and equations preview on hover, and side panels list each of them.
+
+## FAQ
+
+- **Is it free?** Yes, MIT licensed. No account, no subscription, no tracking ([PRIVACY.md](PRIVACY.md)).
+- **Only arXiv papers?** No: drop any PDF. arXiv links and Hugging Face search just fill in the details for you.
+- **Where are my notes?** Inside the PDF, as standard annotations. Open the file in any PDF app and they are there.
+- **How do I sync between machines?** Put the library folder in iCloud Drive, Dropbox, Syncthing or a git repo.
+- **Can I leave?** Nothing to export: the folder of PDFs and JSON files is the library.
+
 ## More
 
 - [DEVELOPMENT.md](DEVELOPMENT.md): architecture, running and testing it, the Chrome extension, the example library, releases.
 - [RELEASING.md](RELEASING.md): the release workflow and store publishing.
 - [PRIVACY.md](PRIVACY.md) · [CODE_SIGNING.md](CODE_SIGNING.md)
 - Built on [svelte-pdf-mini](https://github.com/julien-blanchon/svelte-pdf-mini), my Svelte library for PDF reading and annotation.
+
+## Contributing
+
+Bug reports and ideas are welcome in [Issues](https://github.com/julien-blanchon/xivly/issues). If Xivly is useful to you, a ⭐ helps other people find it.
 
 MIT License.
