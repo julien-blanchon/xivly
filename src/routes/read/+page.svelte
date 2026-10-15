@@ -107,6 +107,8 @@
 
 	// Annotation tools offered: highlight is the only text markup; one Box
 	// tool, filled (area) or outlined (rect) per Settings › Annotations.
+	/** Pen and arrows draw on (no popover after each stroke); double-click one to edit it. */
+	const DRAWING_TOOLS: AnnotationTool[] = ['ink', 'arrow'];
 	const tools = $derived<AnnotationTool[]>(['select', 'hand', 'highlight', s.boxFill ? 'area' : 'rect', 'note', 'freetext', 'ink', 'arrow', 'eraser']);
 	const keymap = $derived({ 'tool.area': s.boxFill ? ['b', 'a'] : [], 'tool.rect': s.boxFill ? [] : ['b', 'r'] });
 
@@ -561,6 +563,7 @@
 							stickyTools={s.stickyTools}
 							selectOn={s.selectOn}
 							editOnCreate={s.editOnCreate}
+							drawingTools={DRAWING_TOOLS}
 							inkSmoothing={s.inkSmoothing}
 							foreign={s.foreignAnnotations}
 							noteEmojis={s.noteEmojis}

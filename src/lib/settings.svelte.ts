@@ -54,7 +54,7 @@ const defaults = {
 	// Annotations
 	author: '',
 	annotationsVisible: true,
-	sideNotes: true,
+	sideNotes: false,
 	lineMarkers: true,
 	stickyTools: false,
 	/** Pen stroke smoothing (svelte-pdf-mini `smoothStroke`). */
@@ -63,7 +63,7 @@ const defaults = {
 	boxFill: true,
 	selectOn: 'dblclick' as 'click' | 'dblclick',
 	/** Color / note / copy menu over a text selection. */
-	selectionMenu: true,
+	selectionMenu: false,
 	editOnCreate: true,
 	foreignAnnotations: 'readonly' as 'editable' | 'readonly' | 'hidden',
 	/** The 8 emoji a note can show, picked with keys 1–8 while the note tool is active. */
