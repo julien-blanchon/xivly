@@ -8,6 +8,7 @@
 	],
 	"entry": [
 		"src/**/*.test.ts",
-		"src/lib/extension/background.ts"
+		"src/lib/extension/background.ts",
+		"src/lib/extension/content.ts"
 	]
 }

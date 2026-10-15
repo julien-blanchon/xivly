@@ -15,7 +15,7 @@ Everything else (library logic, metadata extraction, reader, annotations) is sha
 
 ```
 src/lib/platform/   LibraryFs + Platform interface; tauri.ts / web.ts adapters
-src/lib/extension/  Chrome extension only: service worker, "Open in Xivly"
+src/lib/extension/  Chrome extension only: service worker, arXiv content script, "Open in Xivly"
 src/lib/repo.ts     library layout, paper.json merge, import, save (shared)
 src/lib/extract.ts  metadata extraction (svelte-pdf-mini analyzePaper + links/year)
 src/lib/library.svelte.ts   app state (filters, search, categories, tags)
@@ -52,14 +52,17 @@ The web app as an extension page (`chrome-extension://<id>/index.html`), from th
 
 - switches SvelteKit to its hash router (`index.html#/read?id=…`: an extension is plain files, with no fallback page for `/read`) and its app folder to `app/` (Chrome reserves names starting with `_`), in `vite.config.js`;
 - sets `__XIVLY_EXTENSION__` (`vite.config.js`), which gates the extension's own code (`src/lib/extension/`): the web and desktop bundles leave it out;
-- then `scripts/build-extension.ts` moves SvelteKit's inline bootstrap script to `boot.js` (extension pages only run scripts from the package), bundles the service worker, renders the icons from `src-tauri/icons/icon.svg`, writes `manifest.json` from `package.json`'s version and zips it all.
+- then `scripts/build-extension.ts` moves SvelteKit's inline bootstrap script to `boot.js` (extension pages only run scripts from the package), bundles the service worker and the content script, renders the icons from `src-tauri/icons/icon.svg`, writes `manifest.json` from `package.json`'s version and zips it all.
 
 What it adds to the web app:
 
 - The toolbar button opens the library, or focuses the tab that shows it.
-- **Open in Xivly** (right-click an arXiv abstract / PDF page or link, an alphaXiv or Hugging Face paper page, or any `.pdf` link; or the toolbar button's menu, *Open this tab in Xivly*, e.g. on a PDF open in Chrome): adds the paper (arXiv papers the same way as pasting their link) and opens it in the reader. An arXiv paper or a link already in the library just opens.
+- **Open in Xivly** (right-click an arXiv abstract / PDF page or link, an alphaXiv or Hugging Face paper page, or any `.pdf` link; the link next to *View PDF* on arXiv abstract pages; or the toolbar button's menu, *Open this tab in Xivly*, e.g. on a PDF open in Chrome): adds the paper (arXiv papers the same way as pasting their link) and opens it in the reader. An arXiv paper or a link already in the library just opens. All of them open `index.html#/?add=<link>` (`src/lib/open-url.svelte.ts`, shared with the web app's `/?add=`; the extension adds the site permission prompt below and focuses a reader already showing the paper).
+- **arXiv PDFs open in Xivly** instead of Chrome's viewer (*Settings › Library*, on by default): the service worker watches arXiv tabs' URLs (`tabs.onUpdated`) and points a tab that shows `arxiv.org/pdf/…` at `#/?add=`. Only top-level navigations: Xivly's own downloads of the PDF are `fetch`es. The PDF stays in the tab's history: *Back* from Xivly shows it in Chrome's viewer rather than redirecting again (until the tab shows another arXiv page). The setting lives in the app's `localStorage`, which the service worker can't read: the app mirrors it into `chrome.storage.local`.
 
-Permissions: `contextMenus` and `activeTab` (no install warning). Sites that let other sites download their PDFs (arXiv, most hosts with CORS) need nothing else; for the others Xivly asks first, then Chrome asks for that one site (`optional_host_permissions`). Nothing is read from pages, and no PDF is opened in Xivly unless you ask.
+The content script (`src/lib/extension/content.ts`, on `arxiv.org/abs/*`) only adds that link; the click sends a message, and the service worker opens the page's URL (the message's sender).
+
+Permissions: `contextMenus`, `activeTab` and `storage` (no install warning); site access to `*.arxiv.org` (`host_permissions`, for the content script and to see arXiv tabs' URLs: *Read and change your data on all arxiv.org sites*, the only install warning). Sites that let other sites download their PDFs (arXiv, most hosts with CORS) need nothing else; for the others Xivly asks first, then Chrome asks for that one site (`optional_host_permissions`). Nothing is read from pages but arXiv tabs' URLs, and no PDF is opened in Xivly unless you ask (or open an arXiv PDF, with the setting on). A release that adds an install warning disables the extension for existing users until they accept it.
 
 To try it: `bun run dev:extension`, then `chrome://extensions` → *Developer mode* → *Load unpacked* → `build-extension/`, once. It rebuilds on every change in `src/` or `static/` (about 5 s): open Xivly tabs reload by themselves, and the whole extension reloads (its tabs reopened) when the service worker or the manifest changes. After `bun run build:extension`, use the reload button on the extension's card instead. Inspect the service worker from that card, the app with the usual DevTools. The library folder is picked as on the web; Chrome keeps the extension's library (and its folder access) apart from the website's.
 

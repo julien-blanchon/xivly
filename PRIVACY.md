@@ -20,9 +20,11 @@ These sites receive ordinary web requests (your IP address, browser type), as wh
 
 - **contextMenus**: the *Open in Xivly* menu item on paper pages and PDF links.
 - **activeTab**: when you use *Open this tab in Xivly* from the toolbar button's menu, Xivly reads that tab's address, once, to download its PDF.
+- **Site access to arxiv.org**: an *Open in Xivly* link on arXiv abstract pages, and arXiv PDFs opening in Xivly instead of Chrome's PDF viewer (Settings › Library turns that off). For this, Xivly sees the address of your arXiv tabs only, and keeps none of them.
+- **storage**: that setting, stored in the browser for the extension's background script.
 - **Optional site access**: only when a site doesn't allow other sites to download its PDFs, Chrome asks you to allow Xivly on that one site. It is only used to download the PDFs you open in Xivly.
 
-The extension does not read or change the pages you visit, and does not track your browsing.
+The extension reads nothing from the pages you visit (on arXiv abstract pages, it only adds its link), and does not track your browsing.
 
 ## Contact
 

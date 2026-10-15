@@ -10,6 +10,7 @@
 	import { addFiles } from '#lib/add-paper.js';
 	import { flushAll, hasUnsaved } from '#lib/flush.js';
 	import { library } from '#lib/library.svelte.js';
+	import { openUrlParam } from '#lib/open-url.svelte.js';
 	import { platform } from '#lib/platform/index.js';
 	import { settings } from '#lib/settings.svelte.js';
 	import { keys, matches } from '#lib/shortcuts.js';
@@ -62,6 +63,8 @@
 		}
 		settings.init().then(() => library.init());
 		if (__XIVLY_EXTENSION__) void import('#lib/extension/app.svelte.js').then((m) => m.startExtension());
+		// `/?add=<link>`: add that paper and read it (the extension adds its own steps).
+		else openUrlParam();
 		if (platform.kind !== 'desktop') return;
 		void fixRestoredSize();
 		const win = getCurrentWindow();

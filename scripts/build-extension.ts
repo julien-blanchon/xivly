@@ -6,7 +6,8 @@
 // and the GitHub release: dist/Xivly_<version>_chrome.zip.
 //   - index.html's inline SvelteKit bootstrap moves to boot.js: extension
 //     pages only run scripts from the package (no inline script, no hashes)
-//   - the service worker (src/lib/extension/background.ts) is bundled
+//   - the service worker (src/lib/extension/background.ts) and the content
+//     script of arXiv abstract pages (content.ts) are bundled
 //   - icons from src-tauri/icons/icon.svg, manifest.json from package.json
 import { mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
@@ -35,6 +36,10 @@ writeFileSync(join(out, 'index.html'), page);
 const sw = await Bun.build({ entrypoints: ['src/lib/extension/background.ts'], outdir: out, naming: 'background.js', target: 'browser', format: 'esm', minify: true, define: { __XIVLY_EXTENSION_DEV__: String(dev) } });
 if (!sw.success) fail(sw.logs.join('\n'));
 
+// ── Content script (arXiv abstract pages): a classic script, not a module ───
+const cs = await Bun.build({ entrypoints: ['src/lib/extension/content.ts'], outdir: out, naming: 'content.js', target: 'browser', format: 'iife', minify: true });
+if (!cs.success) fail(cs.logs.join('\n'));
+
 // ── Icons ───────────────────────────────────────────────────────────────────
 const sizes = [16, 32, 48, 128];
 const icons = Bun.spawnSync(['bun', 'x', 'tauri', 'icon', 'src-tauri/icons/icon.svg', '--png', sizes.join(','), '--output', join(out, 'icons')], { stdout: 'ignore', stderr: 'inherit' });
@@ -58,8 +63,14 @@ const manifest = {
 	action: { default_title: 'Xivly', default_icon: iconSet },
 	background: { service_worker: 'background.js', type: 'module' },
 	// contextMenus: "Open in Xivly". activeTab: the URL of the tab whose toolbar menu was used.
-	// storage (dev builds only): the tabs to reopen after a live reload.
-	permissions: ['contextMenus', 'activeTab', ...(dev ? ['storage'] : [])],
+	// storage: the "Open arXiv PDFs in Xivly" setting, for the service worker; the PDFs it
+	// just opened in Xivly (session); in dev builds, the tabs to reopen after a live reload.
+	// None of these warns at install.
+	permissions: ['contextMenus', 'activeTab', 'storage'],
+	// arXiv: the "Open in Xivly" link on abstract pages, and the URL of its PDF tabs (opened in
+	// Xivly instead). The one install warning: "Read and change your data on all arxiv.org sites".
+	host_permissions: ['*://*.arxiv.org/*'],
+	content_scripts: [{ matches: ['*://*.arxiv.org/abs/*'], js: ['content.js'], run_at: 'document_end' }],
 	// Downloading a PDF from a site without CORS, asked for that site when first needed.
 	optional_host_permissions: ['https://*/*', 'http://*/*'],
 	// The desktop CSP (src-tauri/tauri.conf.json), with any download source: PDFs come from anywhere.
@@ -71,7 +82,7 @@ const manifest = {
 writeFileSync(join(out, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
 
 // Chrome refuses to load an extension whose manifest names a missing file.
-const named = [...Object.values(iconSet), manifest.background.service_worker, 'index.html', 'boot.js'];
+const named = [...Object.values(iconSet), manifest.background.service_worker, ...manifest.content_scripts.flatMap((c) => c.js), 'index.html', 'boot.js'];
 const missing = named.filter((f) => !statSync(join(out, f), { throwIfNoEntry: false }));
 if (missing.length) fail(`manifest.json names missing files: ${missing.join(', ')}`);
 if (!/^\d+(\.\d+){0,3}$/.test(manifest.version)) fail(`"${manifest.version}" is not a Chrome version (1 to 4 numbers).`);
@@ -89,7 +100,7 @@ if (dev) {
 		}
 	};
 	list('');
-	writeFileSync(join(out, 'dev-build.json'), JSON.stringify({ page: hash(all.sort()), worker: hash(['background.js', 'manifest.json']) }));
+	writeFileSync(join(out, 'dev-build.json'), JSON.stringify({ page: hash(all.sort()), worker: hash(['background.js', 'content.js', 'manifest.json']) }));
 	console.log(`${out}/ (unpacked, live reload)`);
 	process.exit(0);
 }

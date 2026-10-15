@@ -95,7 +95,11 @@ const defaults = {
 	recentWindow: 'week' as RecentWindow,
 
 	// Desktop
-	hookToasts: 'errors' as 'all' | 'errors' | 'off'
+	hookToasts: 'errors' as 'all' | 'errors' | 'off',
+
+	// Chrome extension
+	/** arXiv PDFs open in Xivly instead of Chrome's viewer (read by the service worker, extension/app.svelte.ts). */
+	openArxivPdfs: true
 };
 
 export type Settings = typeof defaults;

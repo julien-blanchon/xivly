@@ -162,6 +162,7 @@
 								{@render row('Example papers', starter.error ?? 'Annotated papers to explore the app (tagged #demo)', samplesCtl)}
 								{#snippet locCtl()}<button class={button('secondary')} onclick={() => library.choose()}>Change…</button>{/snippet}
 								{@render row('Library folder', library.name, locCtl)}
+								{#if __XIVLY_EXTENSION__}{@render toggle('openArxivPdfs', 'Open arXiv PDFs in Xivly', 'PDFs you open on arxiv.org show in the reader instead of Chrome’s viewer')}{/if}
 							{:else if settingsDialog.section === 'hooks'}
 								{#snippet hookCtl()}<Select label="Hook notifications" value={s.hookToasts} onValueChange={set('hookToasts')} items={[{ value: 'errors', label: 'Failures only' }, { value: 'all', label: 'Every run' }, { value: 'off', label: 'Never' }]} />{/snippet}
 								{@render row('Notifications', 'When a hook script runs', hookCtl)}

@@ -16,9 +16,11 @@ export const PAPER_URLS = [
 
 /**
  * Between the extension's pages and its service worker: "is a library tab
- * open?", "is this paper open in a reader?" (answered with that tab).
+ * open?", "is this paper open in a reader?" (answered with that tab). From the
+ * "Open in Xivly" link on arXiv abstract pages (./content.ts) to the service
+ * worker: open the page it is on (in a background tab: a middle or ⌘/Ctrl click).
  */
-export type ExtensionMessage = { type: 'find-library' } | { type: 'find-reader'; id: string };
+export type ExtensionMessage = { type: 'find-library' } | { type: 'find-reader'; id: string } | { type: 'open-page'; background: boolean };
 
 /** Switch to a tab showing the library (one answers `find-library`): false when none is open. */
 export async function focusLibraryTab() {
