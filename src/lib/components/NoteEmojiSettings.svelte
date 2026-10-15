@@ -6,6 +6,7 @@
 	import { defaultNoteEmojis, isSingleEmoji } from 'svelte-pdf-mini';
 	import { noteEmojiChoices, noteEmojiLabel } from '#lib/pdf/note-emoji.js';
 	import { settings } from '#lib/settings.svelte.js';
+	import { verbatim } from '#lib/ui/verbatim.js';
 
 	const emojis = $derived(settings.values.noteEmojis);
 	const isDefault = $derived(emojis.join() === defaultNoteEmojis.join());
@@ -71,6 +72,7 @@
 											}}
 										>
 											<input
+												{...verbatim}
 												class="h-8 min-w-0 flex-1 rounded-md border border-stone-300 bg-transparent px-2 font-emoji text-[13px] outline-none placeholder:font-sans focus-visible:ring-2 focus-visible:ring-blue-500/60 dark:border-stone-700"
 												bind:value={typed}
 												placeholder="Type or paste any emoji"

@@ -19,6 +19,7 @@
 	import UiDialog from '#lib/ui/Dialog.svelte';
 	import Tip from '#lib/ui/Tip.svelte';
 	import { toast } from './Toasts.svelte';
+	import { verbatim } from '#lib/ui/verbatim.js';
 
 	const editing = $derived(categoryDialog.id ? library.category(categoryDialog.id) : undefined);
 	let name = $state('');
@@ -82,7 +83,7 @@
 		<!-- The system color picker, opened by the button above (not nested in it). -->
 		<input bind:this={picker} type="color" tabindex="-1" aria-hidden="true" class="pointer-events-none absolute size-0 opacity-0" value={categoryColor(color).accent} oninput={(e) => (color = e.currentTarget.value as CategoryColor)} />
 		<!-- svelte-ignore a11y_autofocus -->
-		<input bind:value={name} autofocus placeholder="Name, e.g. Robotics" aria-label="Name" class="h-8 min-w-0 flex-1 rounded-lg bg-stone-100 px-2.5 text-[13px] outline-none placeholder:text-muted focus-visible:ring-2 focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 dark:bg-stone-800" />
+		<input bind:value={name} {...verbatim} autofocus placeholder="Name, e.g. Robotics" aria-label="Name" class="h-8 min-w-0 flex-1 rounded-lg bg-stone-100 px-2.5 text-[13px] outline-none placeholder:text-muted focus-visible:ring-2 focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 dark:bg-stone-800" />
 	</div>
 	<div class="mt-5 flex justify-end gap-2">
 		<Dialog.Close type="button" class={button('secondary')}>Cancel</Dialog.Close>

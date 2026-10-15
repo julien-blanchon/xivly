@@ -18,6 +18,7 @@
 	import Kbd from '#lib/ui/Kbd.svelte';
 	import Tip from '#lib/ui/Tip.svelte';
 	import { button, iconButton } from '#lib/ui/button.js';
+	import { verbatim } from '#lib/ui/verbatim.js';
 
 	let { class: className = '' }: { class?: string } = $props();
 	let link = $state('');
@@ -106,6 +107,7 @@
 									<span class="{searching ? 'icon-[lucide--search]' : 'icon-[lucide--link]'} size-3.5 shrink-0 text-stone-400"></span>
 									<!-- svelte-ignore a11y_autofocus -->
 									<input
+										{...verbatim}
 										bind:value={link}
 										{onkeydown}
 										autofocus

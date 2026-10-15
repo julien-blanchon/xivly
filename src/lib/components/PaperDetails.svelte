@@ -12,6 +12,7 @@
 	import Tip from '#lib/ui/Tip.svelte';
 	import PaperActions from './PaperActions.svelte';
 	import { toast } from './Toasts.svelte';
+	import { verbatim } from '#lib/ui/verbatim.js';
 
 	/**
 	 * `actions`: extra buttons for the action row (the reader adds its exports).
@@ -78,6 +79,7 @@
 <div class="flex min-h-full flex-col gap-5 text-[13px]">
 	<div>
 		<textarea
+			{...verbatim}
 			class="{field} field-sizing-content resize-none font-serif text-lg leading-snug"
 			value={draft.title ?? paper.title}
 			aria-label="Title"
@@ -86,6 +88,7 @@
 		></textarea>
 		<!-- Wraps (papers can have 70+ authors), scrolls past a few lines. -->
 		<textarea
+			{...verbatim}
 			class="{field} field-sizing-content max-h-24 resize-none overflow-y-auto text-stone-600 dark:text-stone-400"
 			value={draft.authors ?? paper.authors?.join(', ') ?? ''}
 			placeholder="Authors"
@@ -93,7 +96,7 @@
 			oninput={(e) => edit('authors', e.currentTarget.value)}
 			onblur={() => flush('authors')}
 		></textarea>
-		<input class="{field} w-20 text-stone-600 dark:text-stone-400" value={draft.year ?? paper.year ?? ''} placeholder="Year" aria-label="Year" inputmode="numeric" oninput={(e) => edit('year', e.currentTarget.value)} onblur={() => flush('year')} />
+		<input {...verbatim} class="{field} w-20 text-stone-600 dark:text-stone-400" value={draft.year ?? paper.year ?? ''} placeholder="Year" aria-label="Year" inputmode="numeric" oninput={(e) => edit('year', e.currentTarget.value)} onblur={() => flush('year')} />
 	</div>
 
 	<div>

@@ -3,6 +3,7 @@
 	import { Dialog } from 'bits-ui';
 	import UiDialog from './Dialog.svelte';
 	import { prompts } from './prompt.svelte';
+	import { verbatim } from '#lib/ui/verbatim.js';
 
 	// Starts from each prompt's value; the field edits it.
 	let text = $derived(prompts.current?.value ?? '');
@@ -16,7 +17,7 @@
 		{#if p.message}<Dialog.Description class="mt-1 text-sm text-muted">{p.message}</Dialog.Description>{/if}
 		{#if p.value !== undefined}
 			<!-- svelte-ignore a11y_autofocus -->
-			<input bind:value={text} autofocus placeholder={p.placeholder} class="mt-3 h-8 w-full rounded-md border border-edge bg-transparent px-2 text-[13px] outline-none placeholder:text-muted focus-visible:ring-2 focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400" />
+			<input bind:value={text} {...verbatim} autofocus placeholder={p.placeholder} class="mt-3 h-8 w-full rounded-md border border-edge bg-transparent px-2 text-[13px] outline-none placeholder:text-muted focus-visible:ring-2 focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400" />
 		{/if}
 		<div class="mt-4 flex justify-end gap-2 text-sm">
 			<button type="button" class={button('secondary')} onclick={() => prompts.close(null)}>Cancel</button>

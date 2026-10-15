@@ -30,6 +30,7 @@
 	import Slider from '#lib/ui/Slider.svelte';
 	import Switch from '#lib/ui/Switch.svelte';
 	import ToggleGroup from '#lib/ui/ToggleGroup.svelte';
+	import { verbatim } from '#lib/ui/verbatim.js';
 
 	const s = $derived(settings.values);
 	const set = <K extends SettingKey>(k: K) => (v: Settings[K]) => settings.set(k, v);
@@ -117,7 +118,7 @@
 									{@render row('Minimap style', '', mmCtl)}
 								{/if}
 							{:else if settingsDialog.section === 'annotations'}
-								{#snippet authorCtl()}<input class="h-8 w-48 rounded-md border border-edge bg-transparent px-2 text-[13px] placeholder:text-muted" value={s.author} placeholder="Your name" onchange={(e) => settings.set('author', e.currentTarget.value.trim())} />{/snippet}
+								{#snippet authorCtl()}<input {...verbatim} class="h-8 w-48 rounded-md border border-edge bg-transparent px-2 text-[13px] placeholder:text-muted" value={s.author} placeholder="Your name" onchange={(e) => settings.set('author', e.currentTarget.value.trim())} />{/snippet}
 								{@render row('Author', 'Stored in each annotation (shown in other PDF readers)', authorCtl)}
 								{@render toggle('annotationsVisible', 'Show annotations')}
 								{@render toggle('sideNotes', 'Side notes', 'Notes in the page margin')}
@@ -140,7 +141,7 @@
 								{@render toggle('confirmUnsaved', 'Ask before closing unsaved work', 'Otherwise unsaved annotations are saved automatically on close')}
 							{:else if settingsDialog.section === 'research'}
 								{@render toggle('citationLookup', 'Look up references online', 'Titles, abstracts and citation counts from OpenAlex and Semantic Scholar')}
-								{#snippet keyCtl()}<input class="h-8 w-56 rounded-md border border-edge bg-transparent px-2 font-mono text-xs placeholder:text-muted" type="password" value={s.semanticScholarKey} placeholder="Optional" onchange={(e) => settings.set('semanticScholarKey', e.currentTarget.value.trim())} />{/snippet}
+								{#snippet keyCtl()}<input {...verbatim} class="h-8 w-56 rounded-md border border-edge bg-transparent px-2 font-mono text-xs placeholder:text-muted" type="password" value={s.semanticScholarKey} placeholder="Optional" onchange={(e) => settings.set('semanticScholarKey', e.currentTarget.value.trim())} />{/snippet}
 								{@render row('Semantic Scholar API key', 'Higher rate limits', keyCtl)}
 							{:else if settingsDialog.section === 'library'}
 								{#snippet sortCtl()}<span class="flex items-center gap-2"><Select label="Sort papers by" value={s.sortBy} onValueChange={set('sortBy')} items={sortOptions.map((o) => ({ value: o.value, label: o.label }))} /><ToggleGroup label="Order" value={s.sortDesc ? 'desc' : 'asc'} onValueChange={(v) => settings.set('sortDesc', v === 'desc')} items={[{ value: 'desc', label: '', title: 'Descending', icon: 'icon-[lucide--arrow-down-wide-narrow]' }, { value: 'asc', label: '', title: 'Ascending', icon: 'icon-[lucide--arrow-up-narrow-wide]' }]} /></span>{/snippet}

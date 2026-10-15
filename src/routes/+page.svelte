@@ -27,6 +27,7 @@
 	import { button } from '#lib/ui/button.js';
 	import { ARCHIVED } from '#lib/library.svelte.js';
 	import { prefersReducedMotion } from 'svelte/motion';
+	import { verbatim } from '#lib/ui/verbatim.js';
 
 	let search = $state<HTMLInputElement>();
 	let scroller = $state<HTMLElement>();
@@ -193,6 +194,7 @@
 			<label class="flex h-8 w-64 min-w-28 shrink-[4] items-center gap-2 rounded-lg bg-stone-200/60 pr-1.5 pl-2.5 ring-blue-500 dark:ring-blue-400 focus-within:bg-white focus-within:ring-2 dark:bg-stone-800/60 dark:focus-within:bg-stone-900">
 				<span class="icon-[lucide--search] size-3.5 shrink-0 text-stone-400"></span>
 				<input
+					{...verbatim}
 					bind:this={search}
 					bind:value={library.query}
 					oninput={onSearchInput}
