@@ -13,6 +13,7 @@
 	import { addFromArxiv, pickFiles } from '#lib/add-paper.js';
 	import { parseArxiv } from '#lib/arxiv.js';
 	import { searchHfPapers, type HfSearchResult } from '#lib/huggingface.js';
+	import { latexToUnicode } from '#lib/latex.js';
 	import { library } from '#lib/library.svelte.js';
 	import { keys } from '#lib/shortcuts.js';
 	import Kbd from '#lib/ui/Kbd.svelte';
@@ -148,7 +149,7 @@
 												onclick={() => add(r.arxiv)}
 												onkeydown={(e) => e.key === 'Enter' && add(r.arxiv)}
 											>
-												<p class="line-clamp-2 text-[13px] leading-snug font-medium">{r.title}</p>
+												<p class="line-clamp-2 text-[13px] leading-snug font-medium">{latexToUnicode(r.title)}</p>
 												<p class="mt-0.5 flex items-center gap-1.5 text-xs text-muted">
 													<span class="min-w-0 truncate">{byline(r)}{r.year ? ` · ${r.year}` : ''}</span>
 													<span class="shrink-0 font-mono text-[11px]">{r.arxiv}</span>

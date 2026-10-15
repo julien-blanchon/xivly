@@ -53,4 +53,11 @@ describe('filterPapers', () => {
 		expect(ids(filterPapers(papers, options({ query: ' DIFFUSION ' })))).toEqual(['c']);
 		expect(ids(filterPapers(papers, options({ query: 'llm' })))).toEqual(['b', 'a']);
 	});
+
+	it('finds and sorts LaTeX titles as shown', () => {
+		const ps = [paper({ id: 'x', title: '$\\alpha$-Divergence' }), paper({ id: 'y', title: 'Beta' })];
+		expect(ids(filterPapers(ps, options({ query: 'α-div' })))).toEqual(['x']);
+		expect(ids(filterPapers(ps, options({ query: 'alpha' })))).toEqual(['x']);
+		expect(ids(filterPapers(ps, options({ sortBy: 'title', sortDesc: false })))).toEqual(['y', 'x']);
+	});
 });

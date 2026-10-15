@@ -36,6 +36,7 @@
 	import { broadcast, onBroadcast } from '#lib/broadcast.js';
 	import { fileManager, mac } from '#lib/os.js';
 	import { button } from '#lib/ui/button.js';
+	import { latexToUnicode } from '#lib/latex.js';
 	import { library } from '#lib/library.svelte.js';
 	import { platform } from '#lib/platform/index.js';
 	import { ReaderLock } from '#lib/reader-lock.svelte.js';
@@ -70,6 +71,8 @@
 
 	const id = $derived(searchParams(page.url).get('id') ?? '');
 	const paper = $derived(library.get(id));
+	/** The title as shown: LaTeX ("$\alpha$") as Unicode. */
+	const title = $derived(paper ? latexToUnicode(paper.title) : '');
 	const s = $derived(settings.values);
 
 	// ── Look: pages tinted with the paper color (category or chosen) ─────
@@ -115,7 +118,7 @@
 
 	const provider = $derived(s.citationLookup ? defaultCitationProvider({ semanticScholarKey: s.semanticScholarKey || undefined, cache: metadataCache }) : undefined);
 
-	$effect(() => void (paper && setWindowTitle(paper.title)));
+	$effect(() => void (title && setWindowTitle(title)));
 
 	// ── One reader per paper (reader-lock.svelte.ts) ─────────────────────
 	// Another tab showing this paper would save over its annotations: only the
@@ -266,8 +269,8 @@
 		onFlush({
 			dirty: () => rev !== savedRev,
 			flush: async () => {
-				const title = paper?.title ?? 'this paper';
-				let choice = settings.values.confirmUnsaved ? await askUnsaved(title) : 'save';
+				const name = title || 'this paper';
+				let choice = settings.values.confirmUnsaved ? await askUnsaved(name) : 'save';
 				for (;;) {
 					if (choice === 'cancel') return false;
 					if (choice === 'discard') {
@@ -278,7 +281,7 @@
 					if (rev === savedRev) return true;
 					// The save failed (folder offline, paper removed, a PDF that can't be
 					// written…): always ask, so the window can still close without saving.
-					choice = await askUnsaved(title, saveError ?? undefined);
+					choice = await askUnsaved(name, saveError ?? undefined);
 				}
 			}
 		})
@@ -687,7 +690,7 @@
 										<div class="title-row flex h-11 items-center gap-1 pr-2" data-tauri-drag-region>
 											<div class="mx-2 flex min-w-0 flex-1 items-baseline gap-3" data-tauri-drag-region>
 												<!-- The title gets at most half the room; the section breadcrumb the rest. -->
-												<p class="min-w-0 truncate font-serif text-[15px] {s.breadcrumb ? 'xl:max-w-1/2' : ''}" title={paper.title} data-tauri-drag-region>{paper.title}</p>
+												<p class="min-w-0 truncate font-serif text-[15px] {s.breadcrumb ? 'xl:max-w-1/2' : ''}" {title} data-tauri-drag-region>{title}</p>
 												{#if s.breadcrumb}<Toc.Breadcrumb class="flex min-w-0 flex-1 truncate text-xs text-muted [&_[data-pdf-toc-item]]:truncate" />{/if}
 											</div>
 

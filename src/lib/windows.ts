@@ -3,6 +3,7 @@
 import { resolve } from '$app/paths';
 import type { ReadonlyURL } from '$app/state';
 import { toast } from './components/Toasts.svelte';
+import { latexToUnicode } from './latex';
 import { platform } from './platform';
 import { readerOpen } from './reader-lock.svelte';
 
@@ -70,6 +71,7 @@ function isBlank(tab: Window) {
 
 /** Open a paper in its own window / tab, or focus it if already open. */
 export async function openPaper(id: string, title = 'Xivly') {
+	title = latexToUnicode(title);
 	if (platform.kind !== 'desktop') {
 		// A named target reuses the paper's tab when it's already open. Pop-ups need
 		// a live gesture: after an await, offer an "Open" button (a click) instead.

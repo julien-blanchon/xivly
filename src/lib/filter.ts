@@ -1,4 +1,5 @@
 // Which papers the library grid shows, and in what order. Pure, so it can be tested.
+import { latexToUnicode } from './latex';
 import type { SortKey } from './settings.svelte';
 import type { Paper } from './types';
 
@@ -24,7 +25,8 @@ const sortKeys: Record<SortKey, (p: Paper) => string> = {
 	opened: (p) => p.opened ?? '',
 	// Full date when known (YYYY-MM-DD sorts as text), else the year.
 	published: (p) => p.date ?? (p.year ? String(p.year) : ''),
-	title: (p) => p.title
+	// As shown: "$\alpha$-…" sorts under α, not $.
+	title: (p) => latexToUnicode(p.title)
 };
 
 // Built once per paper object (an edit replaces the object): typing a search
@@ -33,7 +35,9 @@ const haystacks = new WeakMap<Paper, string>();
 function haystack(p: Paper) {
 	let h = haystacks.get(p);
 	if (h === undefined) {
-		h = [p.title, p.authors?.join(' '), p.abstract, p.year, p.arxiv, p.doi, p.tags?.join(' ')]
+		// The title raw ("\alpha") and as shown ("α"): either finds it.
+		const shown = latexToUnicode(p.title);
+		h = [p.title, shown !== p.title && shown, p.authors?.join(' '), p.abstract, p.year, p.arxiv, p.doi, p.tags?.join(' ')]
 			.filter(Boolean)
 			.join(' ')
 			.toLowerCase();

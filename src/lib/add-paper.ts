@@ -3,6 +3,7 @@
 import { parseArxiv } from './arxiv';
 import { toast } from './components/Toasts.svelte';
 import { findDuplicate, sha256 } from './duplicates';
+import { latexToUnicode } from './latex';
 import { ARCHIVED, library } from './library.svelte';
 import type { Paper } from './types';
 import { prompts } from './ui/prompt.svelte';
@@ -26,7 +27,7 @@ function askDuplicate(p: Paper): Promise<'open' | 'import' | null> {
 				{ value: 'import', label: 'Import anyway' },
 				{ value: 'open', label: archived ? 'Unarchive and open' : 'Open it' }
 			],
-			{ message: `“${p.title}”${archived ? ' is archived, so it’s hidden from the library.' : ''}` }
+			{ message: `“${latexToUnicode(p.title)}”${archived ? ' is archived, so it’s hidden from the library.' : ''}` }
 		)
 	);
 	asking = answer;
@@ -97,7 +98,7 @@ export async function addFromArxiv(text: string) {
 	try {
 		const { id, existed } = await library.importArxiv(text);
 		const paper = library.get(id);
-		const title = paper?.title ?? id;
+		const title = latexToUnicode(paper?.title ?? id);
 		if (paper && existed && isArchived(paper)) toast(`Already in your library, archived: ${title}`, 'info', { label: 'Unarchive', run: () => void library.toggleTag(id, ARCHIVED).catch((e) => toast(String(e), 'error')) });
 		else if (existed) toast(`Already in your library: ${title}`);
 		void pending.open(id, title);

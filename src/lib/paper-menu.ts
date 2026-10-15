@@ -2,6 +2,7 @@
 import { paperLinks } from './cite';
 import { toast } from './components/Toasts.svelte';
 import { detailsDialog } from './components/DetailsDialog.svelte';
+import { latexToUnicode } from './latex';
 import { ARCHIVED, library } from './library.svelte';
 import { fileManager, trashName } from './os';
 import { platform } from './platform';
@@ -19,7 +20,7 @@ export async function addTag(p: Paper) {
 }
 
 export async function trashPaper(p: Paper) {
-	const ok = await prompts.confirm(`Move “${p.title}” to the ${trashName}?`, {
+	const ok = await prompts.confirm(`Move “${latexToUnicode(p.title)}” to the ${trashName}?`, {
 		message: platform.kind === 'desktop' ? `Its folder goes to the ${trashName}.` : 'Its folder goes to .xivly/trash in your library, kept there for 30 days.',
 		confirmLabel: `Move to ${trashName}`,
 		danger: true
