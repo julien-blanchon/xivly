@@ -193,6 +193,28 @@ test('one reader per paper: a second tab takes it over, annotations kept', async
 	expect(errs).toEqual([]);
 });
 
+test('a PDF link as the path (/xivly/https://…) adds the paper and reads it', async ({ page, context }) => {
+	const errs = errors(page);
+	// The PDF's site, with CORS, as hosts that let others download their PDFs.
+	await context.route('https://papers.example.com/**', (route) =>
+		route.fulfill({ path: `${test.info().project.testDir}/fixtures/paper.pdf`, contentType: 'application/pdf', headers: { 'Access-Control-Allow-Origin': '*' } })
+	);
+	await startLibrary(page);
+	await page.goto('./https://papers.example.com/tiny.pdf');
+	await expect(page).toHaveURL(/\/xivly\/read\?id=/);
+	await expect(page.locator('[data-pdf-page]').first().locator('[data-pdf-canvas]')).toBeVisible();
+	// The add is gone from the history: Back is the library, which has it.
+	await page.goBack();
+	await expect(page.getByRole('button', { name: new RegExp(title) })).toBeVisible();
+	expect(errs).toEqual([]);
+});
+
+test('a path that isn’t a paper link is still a 404', async ({ page }) => {
+	await startLibrary(page);
+	await page.goto('./not-a-paper');
+	await expect(page.getByText('Not found')).toBeVisible();
+});
+
 test('a library of 1500 papers stays fast: only the cards on screen are rendered', async ({ page }) => {
 	const errs = errors(page);
 	await startLibrary(page);

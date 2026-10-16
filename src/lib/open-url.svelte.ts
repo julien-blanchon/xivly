@@ -1,6 +1,7 @@
 // `?add=<url>` (`#/?add=` in the Chrome extension): adds the paper at that link
 // (arXiv, or any PDF) once the library is open, then reads it in this tab.
-// Web: https://julien-blanchon.github.io/xivly/?add=https://arxiv.org/abs/1706.03762.
+// Web: https://julien-blanchon.github.io/xivly/?add=https://arxiv.org/abs/1706.03762, or the link
+// as the path (…/xivly/https://arxiv.org/abs/1706.03762, …/xivly/1706.03762: routes/[...link]).
 // The extension's "Open in Xivly" opens these, with steps of its own (extension/app.svelte.ts).
 import { untrack } from 'svelte';
 import { goto } from '$app/navigation';
