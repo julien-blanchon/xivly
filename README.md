@@ -48,10 +48,28 @@ Xivly is a reader for research papers: read, annotate and organize your PDFs, fr
 | **macOS** 26.2+ | `brew install --cask julien-blanchon/tap/xivly`, or the `.dmg` from [Releases](https://github.com/julien-blanchon/xivly/releases). Signed and notarized. |
 | **Windows** 10/11 | the `.exe` (or `.msi`) from [Releases](https://github.com/julien-blanchon/xivly/releases). Not code-signed yet: SmartScreen asks once (*More info → Run anyway*). |
 | **Linux** x86_64 | `curl -fsSL https://raw.githubusercontent.com/julien-blanchon/xivly/main/install.sh \| sh` (picks the `.deb`, `.rpm` or AppImage for your system and checks it), or download one from [Releases](https://github.com/julien-blanchon/xivly/releases). Needs glibc 2.39+ (Ubuntu 24.04, Debian 13, Fedora 40 or newer). |
-| **Web** | [julien-blanchon.github.io/xivly](https://julien-blanchon.github.io/xivly), in a recent Chrome, Edge, Arc or Safari 26.2. Put an arXiv or PDF link (or just an arXiv id) after the address to open that paper: [`…/xivly/https://arxiv.org/abs/1706.03762`](https://julien-blanchon.github.io/xivly/https://arxiv.org/abs/1706.03762), [`…/xivly/1706.03762`](https://julien-blanchon.github.io/xivly/1706.03762), or `…/xivly/?add=<link>`. |
+| **Web** | [julien-blanchon.github.io/xivly](https://julien-blanchon.github.io/xivly), in a recent Chrome, Edge, Arc or Safari 26.2. Put a paper's link after the address to open it ([below](#open-a-paper-from-its-link-web)). |
 | **Chrome extension** | [Chrome Web Store](https://chromewebstore.google.com/detail/xivly/ckcfikoohhefehgbgngopbbiidnhalpi) (Chrome, Edge, Brave, Arc 145+): the web app, plus *Open in Xivly* on arXiv pages and PDF links, and arXiv PDFs open in Xivly instead of Chrome's viewer (a setting). |
 
 Updates: `brew upgrade --cask xivly` on macOS, re-run the install line on Linux, otherwise download the new release (there is no auto-update).
+
+## Open a paper from its link (web)
+
+Put a paper's link, or just its arXiv id, after the web app's address: Xivly adds it to your library and opens it.
+
+| | |
+|---|---|
+| An arXiv id | [`julien-blanchon.github.io/xivly/1706.03762`](https://julien-blanchon.github.io/xivly/1706.03762) |
+| An arXiv link | [`julien-blanchon.github.io/xivly/https://arxiv.org/abs/1706.03762`](https://julien-blanchon.github.io/xivly/https://arxiv.org/abs/1706.03762) |
+| Only the domain swapped | `arxiv.org/abs/1706.03762` → [`julien-blanchon.github.io/xivly/abs/1706.03762`](https://julien-blanchon.github.io/xivly/abs/1706.03762) (`pdf/…` too) |
+| Hugging Face, alphaXiv | `julien-blanchon.github.io/xivly/https://huggingface.co/papers/1706.03762` |
+| Any PDF | `julien-blanchon.github.io/xivly/https://example.com/paper.pdf` |
+
+- A paper already in your library just opens.
+- The first time in a browser, open or start your library: the paper is added right after.
+- A PDF from another site works only if that site lets other sites download it (arXiv does). Otherwise Xivly says so: download it, then drop it in.
+- `julien-blanchon.github.io/xivly/?add=<link>` does the same, for tools that pass the link as a parameter.
+- As a bookmark, to open the page you're on: `javascript:location='https://julien-blanchon.github.io/xivly/'+location.href`
 
 ## Your library is a folder
 
