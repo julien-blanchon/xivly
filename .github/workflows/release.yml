@@ -82,7 +82,7 @@ jobs:
       prerelease: ${{ steps.version.outputs.prerelease }}
       release-id: ${{ steps.draft.outputs.id }}
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ env.TAG }}
 
@@ -202,7 +202,7 @@ jobs:
       # Prereleases use the test-signing policy when there is one.
       SIGNPATH_POLICY: ${{ (needs.prepare.outputs.prerelease == 'true' && vars.SIGNPATH_TEST_SIGNING_POLICY_SLUG) || vars.SIGNPATH_SIGNING_POLICY_SLUG }}
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ env.TAG }}
 
@@ -255,7 +255,7 @@ jobs:
         with:
           targets: ${{ matrix.rust-targets }}
       # Restores the release-profile cache warmed on main (cache.yml); tags don't save.
-      - uses: swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2
+      - uses: swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2
         with:
           workspaces: "./src-tauri -> target"
           shared-key: release-${{ runner.os }}
@@ -336,7 +336,7 @@ jobs:
       - name: Unsigned program artifact
         id: unsigned-app
         if: runner.os == 'Windows' && env.SIGNPATH == 'true'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: xivly-exe-unsigned
           path: src-tauri/target/release/xivly.exe
@@ -366,7 +366,7 @@ jobs:
       - name: Unsigned installers artifact
         id: unsigned-installers
         if: runner.os == 'Windows' && env.SIGNPATH == 'true'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: xivly-installers-unsigned
           path: |
@@ -407,7 +407,7 @@ jobs:
     needs: prepare
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ env.TAG }}
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
@@ -481,7 +481,7 @@ jobs:
       SIGNED: ${{ secrets.APPLE_CERTIFICATE != '' }}
       VERSION: ${{ needs.prepare.outputs.version }}
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ env.TAG }}
 
